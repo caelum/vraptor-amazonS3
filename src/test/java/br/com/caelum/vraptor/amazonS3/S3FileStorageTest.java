@@ -22,19 +22,19 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 public class S3FileStorageTest {
     private DefaultEnvironment env;
     private AmazonS3Client client;
-    private S3FileStorageProvider s3FileProvider;
+    private S3FileStorage s3FileProvider;
     private String bucketName = "bucket-name";
     
     @Before
     public void setUp() throws IOException {
         env = new DefaultEnvironment("testing");
         client = mock(AmazonS3Client.class);
-        s3FileProvider = new S3FileStorageProvider(client);
+        s3FileProvider = new S3FileStorage(client);
     }
     
     @Test
     public void shoud_create_bucket_and_send_file_to_s3() throws Exception {
-        s3FileProvider.mkdir(bucketName);
+        s3FileProvider.newBucket(bucketName);
         
         URL resource = env.getResource("/sample.txt");
         File file = new File(resource.getFile());
