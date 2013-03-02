@@ -41,7 +41,7 @@ public class S3FileStorage implements FileStorage {
         amazonS3Client.createBucket(bucket);
     }
 
-    private URL urlFor(String bucket, String key) {
+    public URL urlFor(String bucket, String key) {
         try {
             return new URL("http://" + bucket + ".s3.amazonaws.com/" + key);
         } catch (MalformedURLException e) {

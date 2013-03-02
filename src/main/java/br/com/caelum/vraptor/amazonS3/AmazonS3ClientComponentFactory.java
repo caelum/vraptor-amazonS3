@@ -3,6 +3,7 @@ package br.com.caelum.vraptor.amazonS3;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.NoSuchElementException;
 
 import javax.annotation.PostConstruct;
 
@@ -20,6 +21,7 @@ public class AmazonS3ClientComponentFactory implements ComponentFactory<AmazonS3
     
     private final Environment env;
     private AmazonS3Client amazonS3Client;
+    private static final String CREDENTIALS_PROPERTY = "br.com.caelum.vraptor.amazonS3.credentials";
 
     public AmazonS3ClientComponentFactory(Environment env) {
         this.env = env;
@@ -32,14 +34,34 @@ public class AmazonS3ClientComponentFactory implements ComponentFactory<AmazonS3
     
     @PostConstruct
     public void create() {
-        URL resource = env.getResource("/AwsCredentials.properties");
+        URL resource = getCredentialsResource();
         try {
             PropertiesCredentials credentials = new PropertiesCredentials(new File(resource.getFile()));
             amazonS3Client = new AmazonS3Client(credentials);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Could not instantiate amazon S3 client", e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Could not instantiate amazon S3 client", e);
+        }
+    }
+
+    private URL getCredentialsResource() {
+        String propertiesFile = ""; 
+        propertiesFile = getOrElse(CREDENTIALS_PROPERTY, "/AwsCredentials.properties");
+        URL resource = env.getResource(propertiesFile);
+        if (resource == null) {
+            throw new IllegalStateException("Could not found your credentials resource, please "
+                            + "place it at a source folder with name AwsCredentials.properties or set its path with "
+                            + CREDENTIALS_PROPERTY + " in your environment file.");
+        }
+        return resource;
+    }
+
+    private String getOrElse(String key, String defaultValue) {
+        try {
+            return env.get(key);
+        } catch (NoSuchElementException e) {
+            return defaultValue;
         }
     }
 

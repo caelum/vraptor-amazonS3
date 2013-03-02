@@ -6,10 +6,12 @@ import java.net.URL;
 
 public interface FileStorage {
 
-    public URL store(File file, String dir, String key);
+    URL store(File file, String bucket, String key);
 
-    public URL store(InputStream is, String dir, String key, String contentType);
+    URL store(InputStream is, String bucket, String key, String contentType);
 
-    public void newBucket(String dir);
+    void newBucket(String name);
+
+    URL urlFor(String bucket, String key);
 
 }

@@ -32,6 +32,11 @@
 			<version>1.1.1</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
@@ -43,6 +48,7 @@
 			<version>1.8.5</version>
 			<scope>test</scope>
 		</dependency>
+		            
 	</dependencies>
 	<build>
 		<plugins>
