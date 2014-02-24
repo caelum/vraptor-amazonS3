@@ -31,13 +31,13 @@ public class LocalFileStorageTest {
 
     @Test
     public void should_store_locally() throws Exception {
-        URL url = localFileStorage.store(file, "subdir", "sample.txt");
+        URL url = localFileStorage.store(file, "subdir", "dir/sample.txt");
 
-        File storedFile = new File(bucketDir, "sample.txt");
+        File storedFile = new File(bucketDir, "dir/sample.txt");
 
         assertTrue(storedFile.exists());
         assertTrue(bucketDir.exists());
-        assertEquals(new URL("http://localhost:8080/files/subdir/sample.txt"), url);
+        assertEquals(new URL("http://localhost:8080/files/subdir/dir/sample.txt"), url);
 
         storedFile.delete();
         bucketDir.delete();
