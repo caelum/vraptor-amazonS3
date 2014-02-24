@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.caelum.vraptor.environment.DefaultEnvironment;
+import br.com.caelum.vraptor.environment.EnvironmentType;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -27,7 +28,7 @@ public class S3FileStorageTest {
     
     @Before
     public void setUp() throws IOException {
-        env = new DefaultEnvironment("testing");
+        env = new DefaultEnvironment(EnvironmentType.TEST);
         client = mock(AmazonS3Client.class);
         s3FileProvider = new S3FileStorage(client);
     }

@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.caelum.vraptor.environment.DefaultEnvironment;
+import br.com.caelum.vraptor.environment.EnvironmentType;
 
 public class LocalFileStorageTest {
 
@@ -22,7 +23,7 @@ public class LocalFileStorageTest {
 
     @Before
     public void setup() throws IOException {
-        env = new DefaultEnvironment("testing");
+        env = new DefaultEnvironment(EnvironmentType.TEST);
         localFileStorage = new LocalFileStorage(env);
         URL resource = env.getResource("/sample.txt");
         file = new File(resource.getFile());

@@ -6,18 +6,16 @@ import java.net.URL;
 import java.util.NoSuchElementException;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
 import br.com.caelum.vraptor.environment.Environment;
-import br.com.caelum.vraptor.ioc.ApplicationScoped;
-import br.com.caelum.vraptor.ioc.Component;
-import br.com.caelum.vraptor.ioc.ComponentFactory;
 
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 
-@Component
 @ApplicationScoped
-public class AmazonS3ClientComponentFactory implements ComponentFactory<AmazonS3Client> {
+public class AmazonS3ClientComponentFactory {
     
     private final Environment env;
     private AmazonS3Client amazonS3Client;
@@ -27,7 +25,7 @@ public class AmazonS3ClientComponentFactory implements ComponentFactory<AmazonS3
         this.env = env;
     }
 
-    @Override
+    @Produces
     public AmazonS3Client getInstance() {
         return amazonS3Client;
     }

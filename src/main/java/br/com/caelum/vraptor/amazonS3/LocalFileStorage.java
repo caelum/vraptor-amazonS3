@@ -13,9 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import br.com.caelum.vraptor.environment.Environment;
-import br.com.caelum.vraptor.ioc.Component;
 
-@Component
 public class LocalFileStorage implements FileStorage {
 
     private static final String SERVER_URL = "br.com.caelum.vraptor.amazonS3.server.url";

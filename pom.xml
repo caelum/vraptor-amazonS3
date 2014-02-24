@@ -3,7 +3,7 @@
 
 	<groupId>br.com.caelum.vraptor</groupId>
 	<artifactId>vraptor-amazonS3</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>vraptor-amazonS3</name>
@@ -23,17 +23,26 @@
 		<dependency>
 			<groupId>br.com.caelum</groupId>
 			<artifactId>vraptor</artifactId>
-			<version>3.5.3</version>
-		</dependency>
-		<dependency>
-			<groupId>br.com.caelum.vraptor</groupId>
-			<artifactId>vraptor-environment</artifactId>
-			<version>1.1.4</version>
+			<version>4.0.0-RC1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>
+						jboss-interceptors-api_1.1_spec
+					</artifactId>
+					<groupId>org.jboss.spec.javax.interceptor</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>
@@ -64,4 +73,26 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>sonatype-oss-snapshot</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>sonatype-oss-public</id>
+			<url>http://oss.sonatype.org/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
