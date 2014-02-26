@@ -17,6 +17,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 @ApplicationScoped
 public class FileStorageFactory {
 	
+	private static final String BUCKET_KEY = "br.com.caelum.vraptor.amazons3.bucket";
 	private final Environment env;
 	private FileStorage fileStorage;
 	private ServletContext context;
@@ -42,7 +43,8 @@ public class FileStorageFactory {
 			AmazonS3ClientFactory factory = new AmazonS3ClientFactory(env);
 			factory.create();
 			AmazonS3Client client = factory.getInstance();
-			this.fileStorage = new S3FileStorage(client);
+			String bucket = env.get(BUCKET_KEY);
+			this.fileStorage = new S3FileStorage(client, bucket);
 		}
 	}
 	

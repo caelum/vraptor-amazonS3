@@ -19,46 +19,36 @@ import br.com.caelum.vraptor.environment.Environment;
 public class LocalFileStorage implements FileStorage {
 
     private static final String SERVER_URL = "br.com.caelum.vraptor.amazonS3.server.url";
-    private static final String LOCAL_DIR = "br.com.caelum.vraptor.amazonS3.localstorage.dir";
     
     private final Environment env;
     private final File localStorageDir;
-    private String localDir;
-    private String serverRoot;
-	private ServletContext context;
+    private final String serverRoot;
+	private final ServletContext context;
 
     public LocalFileStorage(Environment env, ServletContext context) {
         this.env = env;
 		this.context = context;
         
         serverRoot = getOrElse(SERVER_URL, "http://localhost:8080");
-        localDir = getOrElse(LOCAL_DIR, "files/");
-        String filesPath = context.getRealPath(localDir);
-        localStorageDir = new File(filesPath);
-        if (!localStorageDir.exists()) {
-            throw new IllegalStateException("could not find " + localStorageDir
-                    + " dir, please set " + LOCAL_DIR + " properties properly.");
-        }
+        localStorageDir = new File(context.getRealPath("/"));
     }
 
     @Override
-    public URL store(File file, String bucket, String key) {
-        File bucketDir = new File(localStorageDir, bucket);
-        bucketDir.mkdirs();
-        File dest = new File(bucketDir, key);
+    public URL store(File file, String path) {
+        File dest = new File(localStorageDir, path);
+        dest.getParentFile().mkdirs();
         copy(file, dest);
         
-        return urlFor(bucket, key);
+        return urlFor(null, path);
     }
 
     @Override
-    public URL store(InputStream is, String bucket, String key, String contentType) {
-        File bucketDir = new File(localStorageDir, bucket);
-        bucketDir.mkdirs();
-        File dest = new File(bucketDir, key);
+    public URL store(InputStream is, String path, String contentType) {
+    	File dest = new File(localStorageDir, path);
+    	dest.getParentFile().mkdirs();
         copy(is, dest);
         
-        return urlFor(bucket, key);
+        return urlFor(null, path);
     }
 
     private void copy(InputStream is, File dest) {
@@ -80,9 +70,8 @@ public class LocalFileStorage implements FileStorage {
     }
 
     @Override
-    public URL urlFor(String bucket, String key) {
-        localDir = putSlash(localDir);
-        return url(serverRoot + context.getContextPath() + "/" + localDir + bucket + "/" + key);
+    public URL urlFor(String bucket, String path) {
+        return url(putSlash(serverRoot) + putSlash(context.getContextPath()) + path);
     }
 
     private String putSlash(String dir) {

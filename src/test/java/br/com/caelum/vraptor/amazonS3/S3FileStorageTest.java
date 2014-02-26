@@ -30,7 +30,7 @@ public class S3FileStorageTest {
     public void setUp() throws IOException {
         env = new DefaultEnvironment(EnvironmentType.TEST);
         client = mock(AmazonS3Client.class);
-        s3FileProvider = new S3FileStorage(client);
+        s3FileProvider = new S3FileStorage(client, bucketName);
     }
     
     @Test
@@ -40,7 +40,7 @@ public class S3FileStorageTest {
         URL resource = env.getResource("/sample.txt");
         File file = new File(resource.getFile());
         
-        URL uri = s3FileProvider.store(file, bucketName, file.getName());
+        URL uri = s3FileProvider.store(file, file.getName());
         
         verify(client).createBucket(bucketName);
         verify(client).putObject(any(PutObjectRequest.class));
@@ -52,7 +52,7 @@ public class S3FileStorageTest {
         URL resource = env.getResource("/sample.txt");
         InputStream is = new FileInputStream(resource.getFile());
         
-        URL uri = s3FileProvider.store(is, bucketName, "test.txt", "text/plain");
+        URL uri = s3FileProvider.store(is, "test.txt", "text/plain");
         
         verify(client).putObject(any(PutObjectRequest.class));
         assertEquals(new URL("http://" + bucketName + ".s3.amazonaws.com/test.txt"), uri);

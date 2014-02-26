@@ -13,25 +13,27 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 public class S3FileStorage implements FileStorage {
 
     private final AmazonS3Client amazonS3Client;
+	private String bucket;
 
-    public S3FileStorage(AmazonS3Client amazonS3Client) {
+    public S3FileStorage(AmazonS3Client amazonS3Client, String bucket) {
         this.amazonS3Client = amazonS3Client;
+		this.bucket = bucket;
     }
 
-    public URL store(File file, String bucket, String key) {
+    public URL store(File file, String key) {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, key, file)
             .withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3Client.putObject(putObjectRequest);
         return urlFor(bucket, key);
     }
     
-    public URL store(InputStream is, String bucket, String key, String contentType) {
+    public URL store(InputStream is, String path, String contentType) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(contentType);
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, key, is, metadata)
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, path, is, metadata)
             .withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3Client.putObject(putObjectRequest);
-        return urlFor(bucket, key);
+        return urlFor(bucket, path);
     }
     
     public void newBucket(String bucket) {
