@@ -3,11 +3,11 @@ package br.com.caelum.vraptor.amazonS3;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.NoSuchElementException;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 
 import br.com.caelum.vraptor.environment.Environment;
 
@@ -15,13 +15,19 @@ import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 
 @ApplicationScoped
-public class AmazonS3ClientComponentFactory {
+public class AmazonS3ClientFactory {
     
     private final Environment env;
     private AmazonS3Client amazonS3Client;
-    private static final String CREDENTIALS_PROPERTY = "br.com.caelum.vraptor.amazonS3.credentials";
+    public static final String CREDENTIALS_PROPERTY = "br.com.caelum.vraptor.amazonS3.credentials";
 
-    public AmazonS3ClientComponentFactory(Environment env) {
+    @Deprecated
+    AmazonS3ClientFactory() {
+    	this(null);
+	}
+    
+    @Inject
+    public AmazonS3ClientFactory(Environment env) {
         this.env = env;
     }
 
@@ -45,7 +51,7 @@ public class AmazonS3ClientComponentFactory {
 
     private URL getCredentialsResource() {
         String propertiesFile = ""; 
-        propertiesFile = getOrElse(CREDENTIALS_PROPERTY, "/AwsCredentials.properties");
+        propertiesFile = env.get(CREDENTIALS_PROPERTY, "/AwsCredentials.properties");
         URL resource = env.getResource(propertiesFile);
         if (resource == null) {
             throw new IllegalStateException("Could not found your credentials resource, please "
@@ -53,14 +59,6 @@ public class AmazonS3ClientComponentFactory {
                             + CREDENTIALS_PROPERTY + " in your environment file.");
         }
         return resource;
-    }
-
-    private String getOrElse(String key, String defaultValue) {
-        try {
-            return env.get(key);
-        } catch (NoSuchElementException e) {
-            return defaultValue;
-        }
     }
 
 }

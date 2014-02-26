@@ -24,7 +24,7 @@ public class LocalFileStorageTest {
     @Before
     public void setup() throws IOException {
         env = new DefaultEnvironment(EnvironmentType.TEST);
-        localFileStorage = new LocalFileStorage(env);
+        localFileStorage = new LocalFileStorage(env, null);
         URL resource = env.getResource("/sample.txt");
         file = new File(resource.getFile());
         bucketDir = new File("src/main/webapp/files/subdir/");

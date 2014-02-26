@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.NoSuchElementException;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -18,23 +20,24 @@ public class LocalFileStorage implements FileStorage {
 
     private static final String SERVER_URL = "br.com.caelum.vraptor.amazonS3.server.url";
     private static final String LOCAL_DIR = "br.com.caelum.vraptor.amazonS3.localstorage.dir";
-    private static final String WEB_APP = "br.com.caelum.vraptor.amazonS3.webapp.dir";
     
     private final Environment env;
     private final File localStorageDir;
     private String localDir;
     private String serverRoot;
+	private ServletContext context;
 
-    public LocalFileStorage(Environment env) {
+    public LocalFileStorage(Environment env, ServletContext context) {
         this.env = env;
+		this.context = context;
         
-        String webApp = getOrElse(WEB_APP, "src/main/webapp/");
         serverRoot = getOrElse(SERVER_URL, "http://localhost:8080");
         localDir = getOrElse(LOCAL_DIR, "files/");
-        localStorageDir = new File(webApp, localDir);
+        String filesPath = context.getRealPath(localDir);
+        localStorageDir = new File(filesPath);
         if (!localStorageDir.exists()) {
             throw new IllegalStateException("could not find " + localStorageDir
-                    + " dir, please set " + WEB_APP + " and " + LOCAL_DIR + " properties properly.");
+                    + " dir, please set " + LOCAL_DIR + " properties properly.");
         }
     }
 
@@ -79,9 +82,8 @@ public class LocalFileStorage implements FileStorage {
     @Override
     public URL urlFor(String bucket, String key) {
         
-        serverRoot = putSlash(serverRoot);
         localDir = putSlash(localDir);
-        return url(serverRoot + localDir + bucket + "/" + key);
+        return url(serverRoot + context.getContextPath() + "/" + localDir + bucket + "/" + key);
     }
 
     private String putSlash(String dir) {
