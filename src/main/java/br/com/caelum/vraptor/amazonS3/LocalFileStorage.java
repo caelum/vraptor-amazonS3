@@ -81,7 +81,6 @@ public class LocalFileStorage implements FileStorage {
 
     @Override
     public URL urlFor(String bucket, String key) {
-        
         localDir = putSlash(localDir);
         return url(serverRoot + context.getContextPath() + "/" + localDir + bucket + "/" + key);
     }
