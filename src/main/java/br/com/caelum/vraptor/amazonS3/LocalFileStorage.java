@@ -71,7 +71,14 @@ public class LocalFileStorage implements FileStorage {
 
     @Override
     public URL urlFor(String bucket, String path) {
-        return url(putSlash(serverRoot) + putSlash(context.getContextPath()) + path);
+        return url(putSlash(serverRoot) + removeTrailingSlash(putSlash(context.getContextPath())) + path);
+    }
+
+    private String removeTrailingSlash(String path) {
+        if (path.startsWith("/")){
+            return path.substring(1);
+        }
+        return path;
     }
 
     private String putSlash(String dir) {
