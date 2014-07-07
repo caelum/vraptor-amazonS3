@@ -15,6 +15,12 @@
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
+
+    <scm>
+        <url>http://github.com/caelum/vraptor-amazonS3</url>
+        <connection>scm:git:git://github.com/caelum/vraptor-amazonS3</connection>
+        <developerConnection>scm:git:git@github.com:caelum/vraptor-amazonS3.git</developerConnection>
+    </scm>
     
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
